@@ -1,2 +1,2 @@
-= Rinnai REU E211 Controller for PC
+# Rinnai REU E211 Controller for PC
 
