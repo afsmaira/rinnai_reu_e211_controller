@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rinnai-reu-e211-controller"
+version = "0.1.0"
+description = "Unofficial Python controller for Rinnai REU E211 over local network"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { file = "LICENSE" }
+authors = [
+  { name = "afsmaira" }
+]
+dependencies = []
+
+[tool.setuptools]
+packages = ["rinnai_controller"]
