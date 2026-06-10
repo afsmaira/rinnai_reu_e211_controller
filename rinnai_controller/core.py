@@ -115,7 +115,7 @@ class HeaterStatus:
         parts = data.split(",")
         self.status_code = int(parts[0])
         if len(parts) == 14:
-            self.on = parts[2] == "1"
+            self.burning = parts[2] == "1"
             self.T = int(parts[7]) + 32
             self.firmware = datetime.datetime.strptime(parts[9], "%b %d %Y").date()
         else:
@@ -164,6 +164,9 @@ class Controller:
 
     def getData(self, full: bool = False, raw: bool = False):
         return (self.getRequest if raw else self.getParsed)("/bus" if full else "/tela_")
+
+    def getBurning(self):
+        return self.getData().burning
 
     def getTemp(self):
         return self.getData().T
