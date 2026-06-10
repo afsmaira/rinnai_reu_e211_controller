@@ -186,7 +186,7 @@ class Controller:
             data = line.split(",")
             hist.append(
                 {
-                    "time": datetime.time.fromisoformat(data[0]),
+                    "time": datetime.time.fromisoformat(data[0].zfill(5)),
                     "temp": int(data[1]) + 32,
                     "vol": int(data[2]),
                     "gas": int(data[3]),
