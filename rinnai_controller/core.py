@@ -207,8 +207,9 @@ class Controller:
 
     def setTemp(self, new_t: int):
         t = self.getTemp()
+        beg = t
         while t > new_t:
             t = self.decTemp()
         while t < new_t:
             t = self.incTemp()
-        return t
+        return beg, t
