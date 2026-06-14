@@ -89,8 +89,13 @@ def scan_network(
     timeout: float,
     workers: int,
     model_hint: str,
+    debug_mode: bool = False,
 ) -> list[HeaterCandidate]:
     hosts = [str(host) for host in network.hosts()]
+    if debug_mode:
+        print('ALL HOSTS LIST')
+        for host in hosts:
+            print(host)
     results: list[HeaterCandidate] = []
     with ThreadPoolExecutor(max_workers=workers) as executor:
         futures = {
@@ -128,13 +133,14 @@ class HeaterStatus:
 
 
 class Controller:
-    def __init__(self):
+    def __init__(self, debug_mode: bool = False):
         self.status_dict = {11: "Off", 41: "StandBy", 42: "Shower"}
         self.cidr_prefix = 24
         self.ports = {80}
         self.timeout = 1
         self.workers = 64
         self.model_hint = "REU"
+        self.debug = debug_mode
         self.found = self.find()
         if not self.found:
             raise RuntimeError("Heater not found")
@@ -149,7 +155,7 @@ class Controller:
     def find(self):
         network = detect_local_network(self.cidr_prefix)
         matches = scan_network(
-            network, self.ports, self.timeout, self.workers, self.model_hint
+            network, self.ports, self.timeout, self.workers, self.model_hint, self.debug
         )
         return [asdict(match) for match in matches]
 
