@@ -62,6 +62,7 @@ def probe_host(
     ports: Iterable[int],
     timeout: float,
     model_hint: str,
+    debug_mode: bool = False,
 ) -> list[HeaterCandidate]:
     matches: list[HeaterCandidate] = []
     for port in ports:
@@ -92,21 +93,23 @@ def scan_network(
     debug_mode: bool = False,
 ) -> list[HeaterCandidate]:
     hosts = [str(host) for host in network.hosts()]
-    if debug_mode:
-        print('ALL HOSTS LIST')
-        for host in hosts:
-            print(host)
     results: list[HeaterCandidate] = []
     with ThreadPoolExecutor(max_workers=workers) as executor:
         futures = {
-            executor.submit(probe_host, ip, ports, timeout, model_hint): ip
+            executor.submit(probe_host, ip, ports, timeout, model_hint, debug_mode): ip
             for ip in hosts
         }
         for future in as_completed(futures):
             matches = future.result()
             if matches:
                 results.extend(matches)
-
+    
+    if debug_mode:
+        print('ALL HOSTS LIST')
+        match_ips = {result.ip: result.modelo for result in results}
+        for host in hosts:
+            print(f'{host}: {match_ips.get(host, 'Not Found')}')
+            print(host)
     results.sort(key=lambda item: (ipaddress.ip_address(item.ip), item.port))
     return results
 
