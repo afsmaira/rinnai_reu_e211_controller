@@ -115,7 +115,7 @@ def scan_network(
         print('ALL HOSTS LIST')
         match_ips = {result.ip: result.modelo for result in results}
         for host in hosts:
-            print(f'{host}: {match_ips.get(host, 'Not Found')}')
+            print(f'{host}: {match_ips.get(host, 'Not Found') || 'Found'}')
             
     results.sort(key=lambda item: (ipaddress.ip_address(item.ip), item.port))
     return results
