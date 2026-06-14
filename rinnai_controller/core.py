@@ -41,9 +41,9 @@ def http_get_text(ip: str, port: int, endpoint: str, timeout: float) -> str | No
     try:
         with urlopen(url, timeout=timeout) as response:
             payload = response.read()
-        return payload.decode("utf-8", errors="replace").strip()
+        return response.status, payload.decode("utf-8", errors="replace").strip()
     except (URLError, HTTPError, TimeoutError, OSError):
-        return None
+        return 404, None
 
 
 def looks_like_rinnai(modelo: str, model_hint: str) -> bool:
@@ -66,19 +66,19 @@ def probe_host(
 ) -> list[HeaterCandidate]:
     matches: list[HeaterCandidate] = []
     for port in ports:
-        bus = http_get_text(ip, port, "/bus", timeout)
-        hard = http_get_text(ip, port, "/hardware", timeout)
-        modelo = http_get_text(ip, port, "/read_modelo", timeout)
-        if not modelo:
+        _, bus = http_get_text(ip, port, "/bus", timeout)
+        _, hard = http_get_text(ip, port, "/hardware", timeout)
+        code, modelo = http_get_text(ip, port, "/read_modelo", timeout)
+        if code != 200:
             continue
 
         if debug_mode:
             print('BUS', bus)
             print('HARDWARE', hard)
             print('MODELO', modelo)
-        modelo = http_get_text(ip, port, "/read_modelo", timeout)
-        mac = http_get_text(ip, port, "/connect", timeout)
-        tela = http_get_text(ip, port, "/tela_", timeout)
+        _, modelo = http_get_text(ip, port, "/read_modelo", timeout)
+        _, mac = http_get_text(ip, port, "/connect", timeout)
+        _, tela = http_get_text(ip, port, "/tela_", timeout)
         matches.append(
             HeaterCandidate(
                 ip=ip,
@@ -169,7 +169,7 @@ class Controller:
         return [asdict(match) for match in matches]
 
     def getRequest(self, uri: str):
-        return http_get_text(self.found["ip"], self.found["port"], uri, self.timeout)
+        return http_get_text(self.found["ip"], self.found["port"], uri, self.timeout)[1]
 
     def getParsed(self, uri: str):
         response = self.getRequest(uri)
