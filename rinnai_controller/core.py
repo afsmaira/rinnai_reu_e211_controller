@@ -73,9 +73,9 @@ def probe_host(
             continue
 
         if debug_mode:
+            print(ip, port, sep=':')
             print('BUS', bus)
-            print('HARDWARE', hard)
-            print('MODELO', modelo)
+            print()
         _, modelo = http_get_text(ip, port, "/read_modelo", timeout)
         _, mac = http_get_text(ip, port, "/connect", timeout)
         _, tela = http_get_text(ip, port, "/tela_", timeout)
@@ -116,6 +116,7 @@ def scan_network(
         match_ips = {result.ip: result.modelo for result in results}
         for host in hosts:
             print(f'{host}: {match_ips.get(host, 'Not Found')}')
+            
     results.sort(key=lambda item: (ipaddress.ip_address(item.ip), item.port))
     return results
 
