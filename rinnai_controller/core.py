@@ -66,10 +66,16 @@ def probe_host(
 ) -> list[HeaterCandidate]:
     matches: list[HeaterCandidate] = []
     for port in ports:
+        bus = http_get_text(ip, port, "/bus", timeout)
+        hard = http_get_text(ip, port, "/hardware", timeout)
         modelo = http_get_text(ip, port, "/read_modelo", timeout)
         if not modelo or not looks_like_rinnai(modelo, model_hint):
             continue
 
+        if debug_mode:
+            print('BUS', bus)
+        if debug_mode:
+            print('HARDWARE', hard)
         mac = http_get_text(ip, port, "/connect", timeout)
         tela = http_get_text(ip, port, "/tela_", timeout)
         matches.append(
