@@ -200,9 +200,10 @@ class Controller:
             return hist
         for line in payload.split(";")[:-1]:
             data = line.split(",")
+            minutes, seconds = map(int, data[0].split(':'))
             hist.append(
                 {
-                    "time": datetime.time.fromisoformat(data[0].zfill(5)),
+                    "time_sec": minutes*60+seconds,
                     "temp": int(data[1]) + 32,
                     "vol": int(data[2]),
                     "gas": int(data[3]),
