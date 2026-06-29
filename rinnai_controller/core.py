@@ -61,7 +61,6 @@ def probe_host(
     ip: str,
     ports: Iterable[int],
     timeout: float,
-    model_hint: str,
     debug_mode: bool = False,
 ) -> list[HeaterCandidate]:
     matches: list[HeaterCandidate] = []
@@ -117,7 +116,7 @@ def scan_network(
         for host in hosts:
             print(f'{host}: {match_ips.get(host, 'Not Found') or 'Found'}')
             
-    results.sort(key=lambda item: (ipaddress.ip_address(item.ip), item.port))
+    results.sort(key=lambda item: (model_hint not in item.modelo, ipaddress.ip_address(item.ip), item.port))
     return results
 
 
