@@ -77,6 +77,8 @@ def probe_host(
             print('BUS', bus)
             print()
         _, modelo = http_get_text(ip, port, "/read_modelo", timeout)
+        if debug_mode:
+            print('MODEL', modelo)
         if model_hint not in modelo:
             continue
         _, mac = http_get_text(ip, port, "/connect", timeout)
