@@ -73,14 +73,12 @@ def probe_host(
             continue
 
         if debug_mode:
+            print('FOUND', modelo)
             print(ip, port, sep=':')
             print('BUS', bus)
             print()
-        _, modelo = http_get_text(ip, port, "/read_modelo", timeout)
-        if debug_mode:
-            print('MODEL', modelo)
-        if model_hint not in modelo:
-            continue
+        # if model_hint not in modelo:
+        #     continue
         _, mac = http_get_text(ip, port, "/connect", timeout)
         _, tela = http_get_text(ip, port, "/tela_", timeout)
         matches.append(
