@@ -67,6 +67,8 @@ def probe_host(
     matches: list[HeaterCandidate] = []
     for port in ports:
         _, bus = http_get_text(ip, port, "/bus", timeout)
+        if len(bus.split(',')) != 40:
+            continue
         _, hard = http_get_text(ip, port, "/hardware", timeout)
         code, modelo = http_get_text(ip, port, "/read_modelo", timeout)
         if code != 200:
@@ -77,8 +79,7 @@ def probe_host(
             print(ip, port, sep=':')
             print('BUS', bus)
             print()
-        # if model_hint not in modelo:
-        #     continue
+        
         _, mac = http_get_text(ip, port, "/connect", timeout)
         _, tela = http_get_text(ip, port, "/tela_", timeout)
         matches.append(
