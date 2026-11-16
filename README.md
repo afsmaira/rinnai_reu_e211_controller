@@ -48,14 +48,14 @@ Install directly from GitHub (after push):
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
-python -m pip install "git+https://github.com/<user>/<repo>.git"
+python -m pip install "git+https://github.com/afsmaira/rinnai_reu_e211_controller.git"
 ```
 
 Install a specific branch or tag:
 
 ```bash
-python -m pip install "git+https://github.com/<user>/<repo>.git@main"
-python -m pip install "git+https://github.com/<user>/<repo>.git@v0.1.0"
+python -m pip install "git+https://github.com/afsmaira/rinnai_reu_e211_controller.git@main"
+python -m pip install "git+https://github.com/afsmaira/rinnai_reu_e211_controller.git@v0.1.0"
 ```
 
 ## Endpoints
