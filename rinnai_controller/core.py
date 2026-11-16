@@ -164,7 +164,7 @@ class Controller:
         if isinstance(other, int):
             if other < 0:
                 return self.__isub__(-other)
-            limit, errors = 0, 3, 0
+            limit, errors = 3, 0
             while other > 0 and errors < limit:
                 try:
                     self.incTemp()
