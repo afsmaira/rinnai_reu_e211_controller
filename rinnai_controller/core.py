@@ -51,6 +51,7 @@ def looks_like_rinnai(modelo: str, model_hint: str) -> bool:
     if not text:
         return False
 
+    print(text)
     if model_hint and model_hint.upper() in text:
         return True
 
@@ -159,6 +160,32 @@ class Controller:
             raise RuntimeError("Heater not found")
         self.found = self.found[0]
 
+    def __iadd__(self, other):
+        if isinstance(other, int):
+            if other < 0:
+                return self.__isub__(-other)
+            n, limit, errors = 0, 3, 0
+            while n < other and errors < limit:
+                try:
+                    self.incTemp()
+                except RuntimeError:
+                    errors += 1
+            return self
+        raise NotImplementedError("Addition only supported with integers")
+
+    def __isub__(self, other):
+        if isinstance(other, int):
+            if other < 0:
+                return self.__iadd__(-other)
+            n, limit, errors = 0, 3, 0
+            while n < other and errors < limit:
+                try:
+                    self.decTemp()
+                except RuntimeError:
+                    errors += 1
+            return self
+        raise NotImplementedError("Subtraction only supported with integers")
+
     def turnOnOff(self):
         return self.getParsed("/lig")
 
@@ -229,10 +256,6 @@ class Controller:
         return self.errorHistory()[0]["code"]
 
     def setTemp(self, new_t: int):
-        t = self.getTemp()
-        beg = t
-        while t > new_t:
-            t = self.decTemp()
-        while t < new_t:
-            t = self.incTemp()
-        return beg, t
+        beg = self.getTemp()
+        self += new_t - beg
+        return beg, self.getTemp()
