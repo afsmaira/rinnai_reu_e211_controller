@@ -164,12 +164,14 @@ class Controller:
         if isinstance(other, int):
             if other < 0:
                 return self.__isub__(-other)
-            n, limit, errors = 0, 3, 0
-            while n < other and errors < limit:
+            limit, errors = 0, 3, 0
+            while other > 0 and errors < limit:
                 try:
                     self.incTemp()
                 except RuntimeError:
                     errors += 1
+                else:
+                    other -= 1
             return self
         raise NotImplementedError("Addition only supported with integers")
 
@@ -177,12 +179,14 @@ class Controller:
         if isinstance(other, int):
             if other < 0:
                 return self.__iadd__(-other)
-            n, limit, errors = 0, 3, 0
-            while n < other and errors < limit:
+            limit, errors = 3, 0
+            while other > 0 and errors < limit:
                 try:
                     self.decTemp()
                 except RuntimeError:
                     errors += 1
+                else:
+                    other -= 1
             return self
         raise NotImplementedError("Subtraction only supported with integers")
 
